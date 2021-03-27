@@ -20,7 +20,9 @@ To solve the puzzle problem, we define eight virtual moves for the blank positio
 7. Down
 8. Down-left
 
-**Input and Output File Format:** The program will read in the initial and goal states from a text file that contains nine lines as shown:
+**Input and Output File Format:** 
+
+The program will read in the initial and goal states from a text file that contains nine lines as shown:
 ```
 n n n n
 n n n n
@@ -34,6 +36,7 @@ m m m m
 ```
 
 Lines 1 to 4 contain the tile pattern for the initial state and lines 6 to 9 contain the tile pattern for the goal state. Line 5 is a blank line. _n_ and _m_ are integers that range from 0 to 15. Integer 0 represents a blank position and integers 1 to 15 represent the tile numbers. 
+
 The program will produce an output text file that contains 14 lines as shown below:
 ```
 n n n n
