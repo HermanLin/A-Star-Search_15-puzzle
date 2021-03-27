@@ -3,7 +3,7 @@
 **Project Description:** Implement the _A* Search Algorithm with Graph Search_ for solving the 15-
 puzzle problem as described below. Use sum of chessboard distances of tiles from their goal
 positions as heuristic function, where chessboard distance is defined as the maximum of the
-horizontal and vertical distances.
+horizontal and vertical distances. 
 
 **15-Puzzle Problem:** On a 4 x 4 board there are 15 tiles numbered from 1 to 15 and a blank
 position. A tile can slide into the blank position if it is horizontally, vertically or diagonally
@@ -35,7 +35,7 @@ m m m m
 m m m m
 ```
 
-Lines 1 to 4 contain the tile pattern for the initial state and lines 6 to 9 contain the tile pattern for the goal state. Line 5 is a blank line. _n_ and _m_ are integers that range from 0 to 15. Integer 0 represents a blank position and integers 1 to 15 represent the tile numbers. 
+Lines 1 to 4 contain the tile pattern for the initial state and lines 6 to 9 contain the tile pattern for the goal state. Line 5 is a blank line. _n_ and _m_ are integers that range from 0 to 15. Integer 0 represents a blank position and integers 1 to 15 represent the tile numbers. Note: puzzles submitted are assumed to be solvable up to the goal state.
 
 The program will produce an output text file that contains 14 lines as shown below:
 ```
