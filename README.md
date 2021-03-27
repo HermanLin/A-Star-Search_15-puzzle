@@ -10,7 +10,7 @@ position. A tile can slide into the blank position if it is horizontally, vertic
 adjacent to the blank position. Given a start board configuration and a goal board configuration,
 find a sequence of moves to reach the goal configuration from the start configuration. The goal is
 to find a solution with minimum number of moves. 
-To solve the puzzle problem, you can define eight virtual moves for the blank position:
+To solve the puzzle problem, we define eight virtual moves for the blank position:
 1. Left
 2. Up-left
 3. Up
