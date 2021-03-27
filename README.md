@@ -21,16 +21,16 @@ To solve the puzzle problem, you can define eight virtual moves for the blank po
 8. Down-left
 Note: These are general directions, not necessarily the actions performed to get to the tile location. Example: Down-right is not down and then right, but diagonally down and to the right.
 
-**Input and Output File Format:** The program will read in the initial and goal states from a text file that contains nine lines as shown:
-1. n n n n 
-2. n n n n 
-3. n n n n 
-4. n n n n 
-5. 
-6. m m m m 
-7. m m m m 
-8. m m m m 
-9. m m m m 
+**Input and Output File Format:** The program will read in the initial and goal states from a text file that contains nine lines as shown: \
+> n n n n 
+> n n n n 
+> n n n n 
+> n n n n 
+>  
+> m m m m 
+> m m m m 
+> m m m m 
+> m m m m 
 
 Lines 1 to 4 contain the tile pattern for the initial state and lines 6 to 9 contain the tile pattern for the goal state. Line 5 is a blank line. _n_ and _m_ are integers that range from 0 to 15. Integer 0 represents a blank position and integers 1 to 15 represent the tile numbers. 
 The program will produce an output text file that contains 14 lines as shown below:
