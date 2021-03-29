@@ -1,4 +1,5 @@
 from shutil import copyfile
+import os
 from queue import PriorityQueue
 from Node import Node
 from SumSCBD import SumSCBD
@@ -20,9 +21,21 @@ def processFile(filename):
 
     return initialState, goalState
 
+def outputFile(filename, depth, numNodes, actions, fvalues)
+    copyfile(filename, "Output.txt")
+    
+    f = open("Output.txt", 'a')
+    f.write("\n" + depth + "\n" + numNodes + "\n")
+    for action in actions:
+        f.write(action + " ")
+    f.write("\n")
+    for fvalue in fvalues:
+        f.write(fvalue + " ")
+    f.close()
+
 
 def aStar(initalState, heuristic):
-    initialNode = Node(initial, None, None, heuristic)
+    initialNode = Node(initialState, None, None, 0, heuristic)
 
     frontier = PriorityQueue() # store tuples of (f(n), node)
     frontier.put((initialNode.getCost(), initialNode))
@@ -31,9 +44,26 @@ def aStar(initalState, heuristic):
     while not frontier.empty():
         currNode = frontier.get()
         if currNode.getCost() == 0: # a cost of 0 means goal node
-            return currNode
+            return currNode, len(reached) # return solution node, length of reached
+            
+        # expand current node for possible moves
+        children = expand(currNode)
+        for child in children:
+            childState = child.getState()
 
-    return None # solution could not be found
+            # check if the state is already in reached
+            # if it is, compare f(n) values
+            if childState in reached:
+                # if f(n) of the state in reached is greater than the child's f(n)
+                if child.getCost() < reached[childState]:
+                    reached[childState] = child.getCost()
+            else: 
+                reached[childState] = child.getCost()
+
+            # add child to frontier
+            frontier.put((child.getCost(), child))
+
+    return None, 0 # solution could not be found
 
 
 def expand(node, heuristic):
@@ -55,7 +85,7 @@ def expand(node, heuristic):
             newState = node.getState()
             # perform swap
             newState[zX][zY], newState[sX][sY] = newState[sX][sY], newState[zX][zY]
-            childNode = Node(newState, node, action, heuristic)
+            childNode = Node(newState, node, action, node.getDepth() + 1, heuristic)
             children.append(childNode)
 
     return children
@@ -72,23 +102,24 @@ def determineAction(dx, dy):
     if dy == -1 and dx == 1: return 8     # down-left
 
 def main():
+    '''
     # test stuff
     testState = [[1,2,3,4],[5,0,6,7],[8,9,10,11],[12,13,14,15]]
     smallState = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[0,13,14,15]]
     goalState = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
 
     heuristic = SumSCBD(goalState)
-    testNode = Node(testState, None, None, heuristic)
-    smallNode = Node(smallState, None, None, heuristic)
+    testNode = Node(testState, None, None, 0, heuristic)
+    smallNode = Node(smallState, None, None, 0, heuristic)
 
-    '''
+    
     print("testNode:", testNode._state, testNode._parent, testNode._action, testNode.getCost())
     children = expand(testNode, heuristic)
     print("expanding testNode, number of children:", len(children))
     for child in children:
         print(child.getState())
-    '''
-
+    
+    
     print("smallNode:", smallNode._state, smallNode._parent, smallNode._action, smallNode.getCost())
     moreChildren = expand(smallNode, heuristic)
     print("smallNode addr:", smallNode)
@@ -97,5 +128,8 @@ def main():
         print(child.getState())
         print(child._parent, child._action, child.getCost())
         print()
+    '''
+    
+
 
 main()
