@@ -43,8 +43,8 @@ def expand(node, heuristic):
     children = []
     zX, zY = node.getValuePos(0)
     # loop through possible swaps according to 0's position
-    for dx in range(-1, 2):
-        for dy in range(-1, 2):
+    for dy in range(-1, 2):
+        for dx in range(-1, 2):
             sX, sY = zX + dx, zY + dy
             if dx == 0 and dy == 0:
                 continue # the potential move creates the same state, skip
@@ -62,14 +62,14 @@ def expand(node, heuristic):
 
 
 def determineAction(dx, dy):
-    if dx == -1 and dy == 0: return 1     # left
-    if dx == -1 and dy == -1: return 2    # up-left
-    if dx == 0 and dy == -1: return 3     # up
-    if dx == 1 and dy == -1: return 4     # up-right
-    if dx == 1 and dy == 0: return 5      # right
-    if dx == 1 and dy == 1: return 6      # down-right
-    if dx == 0 and dy == 1: return 7      # down
-    if dx == -1 and dy == 1: return 8     # down-left
+    if dy == -1 and dx == 0: return 1     # left
+    if dy == -1 and dx == -1: return 2    # up-left
+    if dy == 0 and dx == -1: return 3     # up
+    if dy == 1 and dx == -1: return 4     # up-right
+    if dy == 1 and dx == 0: return 5      # right
+    if dy == 1 and dx == 1: return 6      # down-right
+    if dy == 0 and dx == 1: return 7      # down
+    if dy == -1 and dx == 1: return 8     # down-left
 
 def main():
     # test stuff
@@ -81,20 +81,21 @@ def main():
     testNode = Node(testState, None, None, heuristic)
     smallNode = Node(smallState, None, None, heuristic)
 
+    '''
     print("testNode:", testNode._state, testNode._parent, testNode._action, testNode.getCost())
     children = expand(testNode, heuristic)
-
-    print("smallNode:", smallNode._state, smallNode._parent, smallNode._action, smallNode.getCost())
-    moreChildren = expand(smallNode, heuristic)
-
-   
     print("expanding testNode, number of children:", len(children))
     for child in children:
         print(child.getState())
+    '''
 
+    print("smallNode:", smallNode._state, smallNode._parent, smallNode._action, smallNode.getCost())
+    moreChildren = expand(smallNode, heuristic)
+    print("smallNode addr:", smallNode)
     print("expanding smallNode, number of children:", len(moreChildren))
     for child in moreChildren:
         print(child.getState())
-
+        print(child._parent, child._action, child.getCost())
+        print()
 
 main()
