@@ -11,7 +11,7 @@ class SumSCBD:
     def calc_SCBD(self, node):
         # calculate heuristic using sum of chessboard distances
         # - chessboard distance = max(horizontal moves, vertical moves)
-
+        
         sum_SCBD = 0
         for i in range(16):
             # find tile positions
