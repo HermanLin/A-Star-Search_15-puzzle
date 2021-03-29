@@ -1,6 +1,5 @@
 from shutil import copyfile
 import os
-from queue import PriorityQueue
 from Node import Node
 from SumSCBD import SumSCBD
 
@@ -16,12 +15,12 @@ def processFile(filename):
     f.close()
 
     # turn into 2d lists
-    initialState = [row.split(' ') for row in initial]
-    goalState = [row.split(' ') for row in goal]
+    initialState = [row.split(' ') for row in initialState]
+    goalState = [row.split(' ') for row in goalState]
 
     return initialState, goalState
 
-def outputFile(filename, depth, numNodes, actions, fvalues)
+def outputFile(filename, depth, numNodes, actions, fvalues):
     copyfile(filename, "Output.txt")
     
     f = open("Output.txt", 'a')
@@ -34,22 +33,23 @@ def outputFile(filename, depth, numNodes, actions, fvalues)
     f.close()
 
 
-def aStar(initalState, heuristic):
+def aStar(initialState, heuristic):
     initialNode = Node(initialState, None, None, 0, heuristic)
 
     frontier = PriorityQueue() # store tuples of (f(n), node)
     frontier.put((initialNode.getCost(), initialNode))
-    reached = {initialState : initialNode.getCost()}
+    initStateStr = stateToString(initialNode.getState())
+    reached = {initStateStr: initialNode.getCost()}
 
     while not frontier.empty():
-        currNode = frontier.get()
+        currNode = frontier.get()[1]
         if currNode.getCost() == 0: # a cost of 0 means goal node
             return currNode, len(reached) # return solution node, length of reached
-            
+
         # expand current node for possible moves
-        children = expand(currNode)
+        children = expand(currNode, heuristic)
         for child in children:
-            childState = child.getState()
+            childState = stateToString(child.getState())
 
             # check if the state is already in reached
             # if it is, compare f(n) values
@@ -65,6 +65,11 @@ def aStar(initalState, heuristic):
 
     return None, 0 # solution could not be found
 
+
+def stateToString(state):
+    tempState = [tile for row in state for tile in row]
+    output = " ".join(tempState)
+    return output
 
 def expand(node, heuristic):
     # expand a node for possible moves
@@ -130,6 +135,24 @@ def main():
         print()
     '''
     
+    filename = input("Enter the name of your file:")
+    initialState, goalState = processFile(filename)
 
+    heuristic = SumSCBD(goalState)
+    solutionNode, numNodes = aStar(initialState, heuristic)
+
+    # fill these lists by backtracking from solutionNode -> initialNode
+    actions = []
+    fvalues = []
+    depth = solutionNode.getDepth()
+
+    if solutionNode: # if a solution was found
+        currNode = solutionNode
+        while currNode != None:
+            actions.insert(0, currNode.getAction())
+            fvalues.insert(0, currNode.getCost())
+            currNode = currNode.getParent()
+
+    outputFile(filename, depth, numNodes, actions, fvalues)
 
 main()
