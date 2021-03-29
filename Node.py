@@ -2,27 +2,11 @@
 
 class Node:
 
-    def __init__(self, state, moves):
+    def __init__(self, state, parent, action, cost):
         self._state = state
-        self._moves = moves
-        self._hValue = None
-
-    def getGValue(self):
-        # cost of getting to current state (1 per move)
-        return len(self._moves)
-
-    def getHValue(self):
-        # if _hValue == None: calculate heuristic
-
-        return self._hValue
-
-    def getFValue(self):
-        # f(n) = g(n) + h(n)
-
-        return self.getGValue() + self.getHValue()
-
-    def getMoves(self):
-        return self._moves
+        self._parent = None
+        self._action = None
+        self._cost = None
 
     def getValuePos(self, value):
         for i in range(4):
