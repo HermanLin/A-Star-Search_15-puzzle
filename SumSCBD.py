@@ -6,7 +6,7 @@ class SumSCBD:
     # - stores the goal state and calculates the SCBD according to it
 
     def __init__(self, state):
-        self._goalNode = Node(state, None, None, 0)
+        self._goalNode = Node(state, None, None, None)
 
     def calc_SCBD(self, node):
         # calculate heuristic using sum of chessboard distances
@@ -15,8 +15,8 @@ class SumSCBD:
         sum_SCBD = 0
         for i in range(16):
             # find tile positions
-            goalX, goalY = _goalNode.getValuePos(i)
+            goalX, goalY = self._goalNode.getValuePos(i)
             currX, currY = node.getValuePos(i)
             # add the max between hori/vert moves
-            sum_SCBD += max(abs(goalX - currX), abs(goalY, currY))
+            sum_SCBD += max(abs(goalX - currX), abs(goalY - currY))
         return sum_SCBD
