@@ -4,7 +4,23 @@ class Node:
 
     def __init__(self, state, moves):
         self._state = state # always 4 by 4
-        self._moves = moves    
+        self._moves = moves
+        self._hValue = None
+
+    def getGValue(self):
+        # cost of getting to current state (1 per move)
+
+        return len(self._moves)
+
+    def getHValue(self):
+        # if _hValue == None: calculate heuristic
+
+        return self._hValue
+
+    def getFValue(self):
+        # f(n) = g(n) + h(n)
+
+        return self.getGValue() + self.getHValue()
 
     def getValuePos(self, value):
         for i in range(4):
