@@ -6,7 +6,7 @@ class SumSCBD:
     # - stores the goal state and calculates the SCBD according to it
 
     def __init__(self, state):
-        self._goalNode = Node(state, None, None, None)
+        self._goalNode = Node(state, None, None, None, None)
 
     def calc_SCBD(self, node):
         # calculate heuristic using sum of chessboard distances
