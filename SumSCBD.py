@@ -1,8 +1,9 @@
-# Class for easy heuristic calculation
-
 from Node import Node
 
 class SumSCBD:
+
+    # Class for easy heuristic calculation
+    # - stores the goal state and calculates the SCBD according to it
 
     def __init__(self, state):
         self._goalNode = Node(state, None, None, 0)
