@@ -1,5 +1,4 @@
 from shutil import copyfile
-import os
 from PQueue import PQueue
 from Node import Node
 from SumSCBD import SumSCBD
@@ -21,10 +20,10 @@ def processFile(filename):
 
     return initialState, goalState
 
-def outputFile(filename, depth, numNodes, actions, fvalues):
-    copyfile(filename, "Output.txt")
+def outputFile(filename, outputFileName, depth, numNodes, actions, fvalues):
+    copyfile(filename, outputFileName)
     
-    f = open("Output.txt", 'a')
+    f = open(outputFileName, 'a')
     f.write("\n\n")
     f.write(str(depth) + "\n" + str(numNodes) + "\n")
     for action in actions:
@@ -39,11 +38,11 @@ def aStar(initialState, goalState, heuristic):
     initialNode = Node(initialState, None, None, 0, heuristic)
 
     frontier = PQueue() # store tuples of (f(n), node)
-    frontier.put((initialNode.getCost(), initialNode))
-    initStateStr = stateToString(initialNode.getState())
-    reached = {initStateStr: initialNode.getCost()}
+    frontier.put((initialNode.getCost(), initialNode)) #add tuple (f(n), node) to frontier
+    initStateStr = stateToString(initialNode.getState()) 
+    reached = {initStateStr: initialNode.getCost()} #dict with all expanded nodes and their f(n) cost
 
-    while not frontier.empty():
+    while not frontier.empty(): 
         currNode = frontier.get()[1]
         if currNode.getState() == goalState: # goal state has been reached
             return currNode, len(reached) # return solution node, length of reached
@@ -68,7 +67,8 @@ def aStar(initialState, goalState, heuristic):
     return None, 0 # solution could not be found
 
 
-def stateToString(state):
+def stateToString(state): 
+    #convert state from list to string
     tempState = [tile for row in state for tile in row]
     output = " ".join(tempState)
     return output
@@ -88,8 +88,8 @@ def expand(node, heuristic):
             if sX < 0 or sX > 3 or sY < 0 or sY > 3:
                 continue # the potential move is out of bounds, skip
             
-            action = determineAction(dx, dy)
-            newState = node.getState()
+            action = determineAction(dx, dy) #action number
+            newState = node.getState() 
             # perform swap
             newState[zX][zY], newState[sX][sY] = newState[sX][sY], newState[zX][zY]
             childNode = Node(newState, node, action, node.getDepth() + 1, heuristic)
@@ -109,26 +109,30 @@ def determineAction(dx, dy):
     if dy == -1 and dx == 1: return 8     # down-left
 
 def main():
-    filename = input("Enter the name of your file:")
-    initialState, goalState = processFile(filename)
+    filename = ""
+    
+    while filename.upper() != "EXIT":
+        filename = input("Enter the name of your file: ")
+        outputFileName = input("Enter the name of your output file: ")
+        initialState, goalState = processFile(filename)
 
-    heuristic = SumSCBD(goalState)
-    solutionNode, numNodes = aStar(initialState, goalState, heuristic)
+        heuristic = SumSCBD(goalState)
+        solutionNode, numNodes = aStar(initialState, goalState, heuristic)
 
-    # fill these lists by backtracking from solutionNode -> initialNode
-    actions = []
-    fvalues = []
-    depth = solutionNode.getDepth()
+        # fill these lists by backtracking from solutionNode -> initialNode
+        actions = []
+        fvalues = []
+        depth = solutionNode.getDepth()
 
-    if solutionNode: # if a solution was found
-        currNode = solutionNode
-        while currNode != None:
-            action = currNode.getAction()
-            if action != None:
-                actions.insert(0, currNode.getAction())
-            fvalues.insert(0, currNode.getCost())
-            currNode = currNode.getParent()
+        if solutionNode: # if a solution was found
+            currNode = solutionNode
+            while currNode != None:
+                action = currNode.getAction()
+                if action != None: # disregard the initialNode's action
+                    actions.insert(0, currNode.getAction())
+                fvalues.insert(0, currNode.getCost())
+                currNode = currNode.getParent()
 
-    outputFile(filename, depth, numNodes, actions, fvalues)
+        outputFile(filename, outputFileName, depth, numNodes, actions, fvalues)
 
 main()

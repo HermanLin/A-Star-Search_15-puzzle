@@ -1,10 +1,11 @@
 import copy
 
 class PQueue:
+    
     # Unique implementation of a PriorityQueue for 15-puzzle Nodes
 
     def __init__(self):
-        self._queue = []
+        self._queue = [] # store PQueue as a list
 
     def print(self):
         return copy.deepcopy(self._queue)
@@ -17,10 +18,11 @@ class PQueue:
         smallestFValue = self._queue[ind][0]
         
         for elem in self._queue:
+            # check if elem's f(n) value is smaller than current
             if elem[0] < smallestFValue:
                 smallestFValue = elem[0]
                 ind = self._queue.index(elem)
-        
+
         return self._queue.pop(ind)
 
     def put(self, element):

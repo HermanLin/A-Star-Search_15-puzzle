@@ -1,6 +1,7 @@
 import copy 
 
 class Node:
+    
     # Node class for A-Star Search Algorithm
 
     def __init__(self, state, parent, action, depth, heuristic):
@@ -25,6 +26,7 @@ class Node:
 
     def getCost(self):
         if not self._cost: # calculate if the cost has not been set
+            # f(n) = g(n) + h(n)
             self._cost = self._depth + self._heuristic.calc_SCBD(self)
         return self._cost
 
