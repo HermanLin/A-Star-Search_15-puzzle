@@ -1,5 +1,6 @@
 from shutil import copyfile
 import os
+from PQueue import PQueue
 from Node import Node
 from SumSCBD import SumSCBD
 
@@ -24,26 +25,27 @@ def outputFile(filename, depth, numNodes, actions, fvalues):
     copyfile(filename, "Output.txt")
     
     f = open("Output.txt", 'a')
-    f.write("\n" + depth + "\n" + numNodes + "\n")
+    f.write("\n\n")
+    f.write(str(depth) + "\n" + str(numNodes) + "\n")
     for action in actions:
-        f.write(action + " ")
+        f.write(str(action) + " ")
     f.write("\n")
     for fvalue in fvalues:
-        f.write(fvalue + " ")
+        f.write(str(fvalue) + " ")
     f.close()
 
 
-def aStar(initialState, heuristic):
+def aStar(initialState, goalState, heuristic):
     initialNode = Node(initialState, None, None, 0, heuristic)
 
-    frontier = PriorityQueue() # store tuples of (f(n), node)
+    frontier = PQueue() # store tuples of (f(n), node)
     frontier.put((initialNode.getCost(), initialNode))
     initStateStr = stateToString(initialNode.getState())
     reached = {initStateStr: initialNode.getCost()}
 
     while not frontier.empty():
         currNode = frontier.get()[1]
-        if currNode.getCost() == 0: # a cost of 0 means goal node
+        if currNode.getState() == goalState: # goal state has been reached
             return currNode, len(reached) # return solution node, length of reached
 
         # expand current node for possible moves
@@ -107,39 +109,11 @@ def determineAction(dx, dy):
     if dy == -1 and dx == 1: return 8     # down-left
 
 def main():
-    '''
-    # test stuff
-    testState = [[1,2,3,4],[5,0,6,7],[8,9,10,11],[12,13,14,15]]
-    smallState = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[0,13,14,15]]
-    goalState = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
-
-    heuristic = SumSCBD(goalState)
-    testNode = Node(testState, None, None, 0, heuristic)
-    smallNode = Node(smallState, None, None, 0, heuristic)
-
-    
-    print("testNode:", testNode._state, testNode._parent, testNode._action, testNode.getCost())
-    children = expand(testNode, heuristic)
-    print("expanding testNode, number of children:", len(children))
-    for child in children:
-        print(child.getState())
-    
-    
-    print("smallNode:", smallNode._state, smallNode._parent, smallNode._action, smallNode.getCost())
-    moreChildren = expand(smallNode, heuristic)
-    print("smallNode addr:", smallNode)
-    print("expanding smallNode, number of children:", len(moreChildren))
-    for child in moreChildren:
-        print(child.getState())
-        print(child._parent, child._action, child.getCost())
-        print()
-    '''
-    
     filename = input("Enter the name of your file:")
     initialState, goalState = processFile(filename)
 
     heuristic = SumSCBD(goalState)
-    solutionNode, numNodes = aStar(initialState, heuristic)
+    solutionNode, numNodes = aStar(initialState, goalState, heuristic)
 
     # fill these lists by backtracking from solutionNode -> initialNode
     actions = []
@@ -149,7 +123,9 @@ def main():
     if solutionNode: # if a solution was found
         currNode = solutionNode
         while currNode != None:
-            actions.insert(0, currNode.getAction())
+            action = currNode.getAction()
+            if action != None:
+                actions.insert(0, currNode.getAction())
             fvalues.insert(0, currNode.getCost())
             currNode = currNode.getParent()
 
