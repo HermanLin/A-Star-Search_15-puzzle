@@ -22,8 +22,7 @@ def processFile(filename):
 
 
 def aStar(initalState, heuristic):
-    initialNode = Node(initial, None, None, None)
-    initialNode._cost = heuristic(initialNode)
+    initialNode = Node(initial, None, None, heuristic)
 
     frontier = PriorityQueue() # store tuples of (f(n), node)
     frontier.put((initialNode.getCost(), initialNode))
@@ -34,30 +33,68 @@ def aStar(initalState, heuristic):
         if currNode.getCost() == 0: # a cost of 0 means goal node
             return currNode
 
+    return None # solution could not be found
 
-def expand(node):
+
+def expand(node, heuristic):
     # expand a node for possible moves
     # return a list of possible moves as nodes
 
     children = []
-    currState = node.getState()
-    zeroX, zeroY = node.getValuePos(0)
+    zX, zY = node.getValuePos(0)
     # loop through possible swaps according to 0's position
-    for i in range(-1, 2):
-        for j in range(-1, 2):
-            pass
+    for dx in range(-1, 2):
+        for dy in range(-1, 2):
+            sX, sY = zX + dx, zY + dy
+            if dx == 0 and dy == 0:
+                continue # the potential move creates the same state, skip
+            if sX < 0 or sX > 3 or sY < 0 or sY > 3:
+                continue # the potential move is out of bounds, skip
+            
+            action = determineAction(dx, dy)
+            newState = node.getState()
+            # perform swap
+            newState[zX][zY], newState[sX][sY] = newState[sX][sY], newState[zX][zY]
+            childNode = Node(newState, node, action, heuristic)
+            children.append(childNode)
 
-def determineAction(i, j):
-    if i == -1 and j == 0: return 1     # left
-    if i == -1 and j == -1: return 2    # up-left
-    if i == 0 and j == -1: return 3     # up
-    if i == 1 and j == -1: return 4     # up-right
-    if i == 1 and j == 0: return 5      # right
-    if i == 1 and j == 1: return 6      # down-right
-    if i == 0 and j == 1: return 7      # down
-    if i == -1 and j == 1: return 8     # down-left
+    return children
 
-def main()):
-    pass
+
+def determineAction(dx, dy):
+    if dx == -1 and dy == 0: return 1     # left
+    if dx == -1 and dy == -1: return 2    # up-left
+    if dx == 0 and dy == -1: return 3     # up
+    if dx == 1 and dy == -1: return 4     # up-right
+    if dx == 1 and dy == 0: return 5      # right
+    if dx == 1 and dy == 1: return 6      # down-right
+    if dx == 0 and dy == 1: return 7      # down
+    if dx == -1 and dy == 1: return 8     # down-left
+
+def main():
+    # test stuff
+    testState = [[1,2,3,4],[5,0,6,7],[8,9,10,11],[12,13,14,15]]
+    smallState = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[0,13,14,15]]
+    goalState = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]
+
+    heuristic = SumSCBD(goalState)
+    testNode = Node(testState, None, None, heuristic)
+    smallNode = Node(smallState, None, None, heuristic)
+
+    print("testNode:", testNode._state, testNode._parent, testNode._action, testNode.getCost())
+    children = expand(testNode, heuristic)
+
+    print("smallNode:", smallNode._state, smallNode._parent, smallNode._action, smallNode.getCost())
+    moreChildren = expand(smallNode, heuristic)
+
+   
+    print("expanding testNode, number of children:", len(children))
+    for child in children:
+        print(child.getState())
+
+    print("expanding smallNode, number of children:", len(moreChildren))
+    for child in moreChildren:
+        print(child.getState())
+
 
 main()
